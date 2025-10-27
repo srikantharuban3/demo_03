@@ -1,0 +1,29 @@
+{
+  "name": "parabank-test-suite",
+  "version": "1.0.0",
+  "description": "Automated test suite for ParaBank application",
+  "main": "tests/parabank.spec.js",
+  "scripts": {
+    "test": "playwright test && node generate-report.js",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "generate-report": "node generate-report.js",
+    "install:browsers": "playwright install"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "automation",
+    "parabank",
+    "e2e"
+  ],
+  "author": "Test Automation Engineer",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "dependencies": {
+    "fs-extra": "^11.1.1"
+  }
+}

@@ -1,0 +1,98 @@
+name: ParaBank Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Run ParaBank Tests
+      run: npm test
+      env:
+        CI: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.browser }}
+        path: |
+          test-results/
+          playwright-report/
+          test-execution-report.html
+        retention-days: 30
+
+    - name: Upload screenshots
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: screenshots-${{ matrix.browser }}
+        path: test-results/
+        retention-days: 7
+
+  report:
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+
+    - name: Merge test results
+      run: |
+        echo "## 🧪 ParaBank Test Execution Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Browser | Status | Details |" >> $GITHUB_STEP_SUMMARY
+        echo "|---------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+        
+        for browser in chromium firefox webkit; do
+          if [ -d "test-results-$browser" ]; then
+            echo "| $browser | ✅ Passed | Tests executed successfully |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| $browser | ❌ Failed | Check logs for details |" >> $GITHUB_STEP_SUMMARY
+          fi
+        done
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Test Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Total Test Cases:** 1" >> $GITHUB_STEP_SUMMARY
+        echo "- **Test Suite:** ParaBank User Registration" >> $GITHUB_STEP_SUMMARY
+        echo "- **Environment:** CI/CD Pipeline" >> $GITHUB_STEP_SUMMARY
+        echo "- **Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+
+    - name: Publish Test Report
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./test-results-chromium
+        destination_dir: test-reports

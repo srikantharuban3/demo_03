@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParaBank Test Execution Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #007acc;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #007acc;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            color: #666;
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .summary-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        .summary-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .test-case {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .test-case-header {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-case-header.failed {
+            background-color: #dc3545;
+        }
+        .status-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .test-case-body {
+            padding: 20px;
+        }
+        .test-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #007acc;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #007acc;
+            font-size: 0.9em;
+        }
+        .info-value {
+            margin-top: 5px;
+            color: #333;
+        }
+        .steps {
+            margin-top: 20px;
+        }
+        .step {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 5px 5px 0;
+        }
+        .step-number {
+            font-weight: bold;
+            color: #007acc;
+            margin-bottom: 5px;
+        }
+        .verification {
+            background-color: #e8f5e8;
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .verification h4 {
+            color: #28a745;
+            margin: 0 0 10px 0;
+        }
+        .verification-item {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .verification-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .screenshot {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .screenshot img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+        }
+        .timestamp {
+            background-color: #007acc;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 ParaBank Test Execution Report</h1>
+            <p>Automated Test Suite Execution Results</p>
+            <div class="timestamp">Executed on: October 27, 2025 at 02:30:15 PM</div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card">
+                <h3>Total Test Cases</h3>
+                <div class="number">1</div>
+                <p>Executed</p>
+            </div>
+            <div class="summary-card">
+                <h3>Passed</h3>
+                <div class="number">1</div>
+                <p>Success Rate: 100%</p>
+            </div>
+            <div class="summary-card">
+                <h3>Failed</h3>
+                <div class="number">0</div>
+                <p>Failure Rate: 0%</p>
+            </div>
+            <div class="summary-card">
+                <h3>Execution Time</h3>
+                <div class="number">45</div>
+                <p>Seconds</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 style="text-align: center; color: #007acc;">Test Results Overview</h3>
+            <canvas id="testResultsChart" width="400" height="200"></canvas>
+        </div>
+
+        <h2 style="color: #007acc; border-bottom: 2px solid #007acc; padding-bottom: 10px;">📋 Test Case Details</h2>
+
+        <div class="test-case">
+            <div class="test-case-header">
+                <span>TC 001 - Verify that user can register a new customer</span>
+                <span class="status-badge">✅ PASSED</span>
+            </div>
+            <div class="test-case-body">
+                <div class="test-info">
+                    <div class="info-item">
+                        <div class="info-label">Test Case ID</div>
+                        <div class="info-value">TC 001</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Description</div>
+                        <div class="info-value">Verify that user can register a new customer</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" style="color: #28a745; font-weight: bold;">PASSED ✅</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Execution Time</div>
+                        <div class="info-value">45 seconds</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Start Time</div>
+                        <div class="info-value">2025-10-27 14:29:30</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">End Time</div>
+                        <div class="info-value">2025-10-27 14:30:15</div>
+                    </div>
+                </div>
+
+                <div class="steps">
+                    <h4 style="color: #007acc;">🔄 Execution Steps</h4>
+                    
+                    <div class="step">
+                        <div class="step-number">Step 1: Navigate to ParaBank</div>
+                        <div>Successfully navigated to https://parabank.parasoft.com/parabank/index.htm</div>
+                        <div style="color: #28a745; margin-top: 5px;">✅ Status: Completed</div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">Step 2: Logout existing user</div>
+                        <div>Detected existing user session (John Doe) and logged out successfully</div>
+                        <div style="color: #28a745; margin-top: 5px;">✅ Status: Completed</div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">Step 3: Click Register Link</div>
+                        <div>Located and clicked the "Register" link in the Customer Login section</div>
+                        <div style="color: #28a745; margin-top: 5px;">✅ Status: Completed</div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">Step 4: Fill Registration Form</div>
+                        <div>Filled all required fields with test data:</div>
+                        <ul style="margin: 8px 0; padding-left: 20px;">
+                            <li><strong>First Name:</strong> TestUser</li>
+                            <li><strong>Last Name:</strong> Auto</li>
+                            <li><strong>Address:</strong> 123 Test Street</li>
+                            <li><strong>City:</strong> TestCity</li>
+                            <li><strong>State:</strong> TC</li>
+                            <li><strong>Zip Code:</strong> 12345</li>
+                            <li><strong>Phone:</strong> 555-TEST-001</li>
+                            <li><strong>SSN:</strong> 111-22-3333</li>
+                            <li><strong>Username:</strong> test102725 (10 characters, unique)</li>
+                            <li><strong>Password:</strong> TestPass123!</li>
+                        </ul>
+                        <div style="color: #28a745; margin-top: 5px;">✅ Status: Completed</div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">Step 5: Submit Registration</div>
+                        <div>Clicked the "Register" button to submit the registration form</div>
+                        <div style="color: #28a745; margin-top: 5px;">✅ Status: Completed</div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">Step 6: Verify Registration Success</div>
+                        <div>Verified successful registration and automatic login</div>
+                        <div style="color: #28a745; margin-top: 5px;">✅ Status: Completed</div>
+                    </div>
+                </div>
+
+                <div class="verification">
+                    <h4>🔍 Verification Results</h4>
+                    <div class="verification-item">Page title changed to "ParaBank | Customer Created"</div>
+                    <div class="verification-item">Welcome message displayed: "Welcome test102725"</div>
+                    <div class="verification-item">Success confirmation: "Your account was created successfully. You are now logged in."</div>
+                    <div class="verification-item">User automatically logged in with access to Account Services</div>
+                    <div class="verification-item">Username meets requirement: 10 characters and unique</div>
+                    <div class="verification-item">All form fields successfully populated and submitted</div>
+                </div>
+
+                <div class="screenshot">
+                    <h4 style="color: #007acc;">📸 Test Evidence</h4>
+                    <p><strong>Screenshot:</strong> TC001_registration_success.png</p>
+                    <p style="color: #666; font-size: 0.9em;">Screenshot captured showing successful registration with welcome message</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Test Environment:</strong> ParaBank Demo Application (https://parabank.parasoft.com/parabank)</p>
+            <p><strong>Test Tool:</strong> Playwright MCP Automation Framework</p>
+            <p><strong>Test Engineer:</strong> Automated Test Execution System</p>
+            <p><strong>Report Generated:</strong> October 27, 2025 at 2:30:15 PM</p>
+            <hr style="margin: 20px 0;">
+            <p style="color: #28a745; font-weight: bold;">🎉 All Test Cases Executed Successfully!</p>
+        </div>
+    </div>
+
+    <script>
+        // Create the bar chart
+        const ctx = document.getElementById('testResultsChart').getContext('2d');
+        const testResultsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Tests', 'Passed', 'Failed', 'Skipped'],
+                datasets: [{
+                    label: 'Test Results',
+                    data: [1, 1, 0, 0],
+                    backgroundColor: [
+                        '#007acc',    // Total - Blue
+                        '#28a745',    // Passed - Green
+                        '#dc3545',    // Failed - Red
+                        '#ffc107'     // Skipped - Yellow
+                    ],
+                    borderColor: [
+                        '#005999',
+                        '#1e7e34',
+                        '#c82333',
+                        '#e0a800'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Test Execution Summary',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        color: '#007acc'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 2,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return value % 1 === 0 ? value : '';
+                            }
+                        },
+                        grid: {
+                            color: '#e0e0e0'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+
+        // Add hover effects to test case cards
+        document.querySelectorAll('.test-case').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                this.style.transition = 'all 0.3s ease';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+            });
+        });
+    </script>
+</body>
+</html>
