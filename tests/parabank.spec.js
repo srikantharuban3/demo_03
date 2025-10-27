@@ -29,7 +29,7 @@ test.describe('ParaBank Test Suite', () => {
 
     // Step 2: Click on Register link
     await test.step('Click on Register link', async () => {
-      const registerLink = page.locator('a[href="register.htm"]');
+      const registerLink = page.locator('text=Register');
       await expect(registerLink).toBeVisible();
       await registerLink.click();
       await expect(page).toHaveTitle(/Register for Free Online Account Access/);
@@ -78,8 +78,8 @@ test.describe('ParaBank Test Suite', () => {
       await expect(welcomeHeading).toContainText(`Welcome ${uniqueUsername}`);
       
       // Verify success message
-      const successMessage = page.locator('p');
-      await expect(successMessage).toContainText('Your account was created successfully');
+      const successMessage = page.locator('p:has-text("Your account was created successfully")');
+      await expect(successMessage).toBeVisible();
       
       // Verify user is logged in - check for account services
       const accountServices = page.locator('h2:has-text("Account Services")');
