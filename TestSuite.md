@@ -25,3 +25,5 @@
 - user name should be 10 charactors and should be unique.
 - submit the form by clicking on the register page. 
 - Verify that welcome message with the new username is displayed.
+
+<!-- Pipeline trigger: 2025-10-27 -->
