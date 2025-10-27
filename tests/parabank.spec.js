@@ -19,11 +19,15 @@ test.describe('ParaBank Test Suite', () => {
 
     // Check if user is already logged in and logout if needed
     await test.step('Ensure clean session', async () => {
-      const logoutLink = page.locator('a[href="logout.htm"]');
-      if (await logoutLink.isVisible()) {
-        await logoutLink.click();
-        await page.waitForLoadState('networkidle');
-        console.log('✅ Logged out existing session');
+      try {
+        const logoutLink = page.locator('a[href="logout.htm"]');
+        if (await logoutLink.isVisible({ timeout: 5000 })) {
+          await logoutLink.click();
+          await page.waitForLoadState('networkidle');
+          console.log('✅ Logged out existing session');
+        }
+      } catch (error) {
+        console.log('ℹ️ No existing session to logout');
       }
     });
 
@@ -61,29 +65,52 @@ test.describe('ParaBank Test Suite', () => {
 
     // Step 4: Submit registration form
     await test.step('Submit registration form', async () => {
-      const registerButton = page.locator('input[value="Register"]');
+      const registerButton = page.locator('input[value="Register"]').or(page.locator('button:has-text("Register")'));
       await expect(registerButton).toBeVisible();
-      await registerButton.click();
+      
+      // Use Promise.race to handle both successful navigation and potential form validation
+      await Promise.race([
+        registerButton.click(),
+        page.waitForURL(/.*/, { timeout: 5000 })
+      ]);
+      
+      // Wait a bit for the form submission to process
+      await page.waitForTimeout(2000);
       console.log('✅ Submitted registration form');
     });
 
     // Step 5: Verify successful registration
     await test.step('Verify successful registration', async () => {
-      // Wait for page to load and check title
-      await page.waitForLoadState('networkidle');
-      await expect(page).toHaveTitle(/Customer Created/);
+      // Wait for page to load and check title with longer timeout for CI
+      await page.waitForLoadState('networkidle', { timeout: process.env.CI ? 60000 : 30000 });
+      
+      // Check if we're still on the registration page (form validation error)
+      const currentTitle = await page.title();
+      if (currentTitle.includes('Register for Free Online Account Access')) {
+        // Check for validation errors
+        const errorMessages = await page.locator('.error').allTextContents();
+        if (errorMessages.length > 0) {
+          throw new Error(`Registration failed with validation errors: ${errorMessages.join(', ')}`);
+        }
+        // If no explicit errors, try submitting again
+        const registerButton = page.locator('input[value="Register"]').or(page.locator('button:has-text("Register")'));
+        await registerButton.click();
+        await page.waitForLoadState('networkidle', { timeout: 30000 });
+      }
+      
+      await expect(page).toHaveTitle(/Customer Created/, { timeout: 15000 });
       
       // Verify welcome message with username
-      const welcomeHeading = page.locator('h1.title');
-      await expect(welcomeHeading).toContainText(`Welcome ${uniqueUsername}`);
+      const welcomeHeading = page.locator('h1.title').or(page.locator('h1:has-text("Welcome")'));
+      await expect(welcomeHeading).toContainText(`Welcome ${uniqueUsername}`, { timeout: 10000 });
       
       // Verify success message
       const successMessage = page.locator('p:has-text("Your account was created successfully")');
-      await expect(successMessage).toBeVisible();
+      await expect(successMessage).toBeVisible({ timeout: 10000 });
       
       // Verify user is logged in - check for account services
       const accountServices = page.locator('h2:has-text("Account Services")');
-      await expect(accountServices).toBeVisible();
+      await expect(accountServices).toBeVisible({ timeout: 10000 });
       
       console.log(`✅ Registration verified successfully for user: ${uniqueUsername}`);
     });

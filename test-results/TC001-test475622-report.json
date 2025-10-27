@@ -1,0 +1,17 @@
+{
+  "testCaseId": "TC 001",
+  "testCaseName": "Verify that user can register a new customer",
+  "status": "PASSED",
+  "username": "test475622",
+  "executionTime": "2025-10-27T14:14:41.241Z",
+  "browser": "webkit",
+  "steps": [
+    "Navigate to ParaBank index page",
+    "Ensure clean session",
+    "Click on Register link",
+    "Fill registration form with unique data",
+    "Submit registration form",
+    "Verify successful registration",
+    "Capture test evidence"
+  ]
+}
